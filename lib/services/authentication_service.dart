@@ -18,7 +18,7 @@ class AuthenticationService {
 
   Future<Map<String, dynamic>> signIn(String email, String password) async {
     final dio = Dio();
-    final url = '$baseUrl/auth/v1/token?grant_type=password';
+    final url = '$baseUrl/login';
 
     final response = await dio.post(
       url,
@@ -33,7 +33,7 @@ class AuthenticationService {
 
   Future<void> signOut(String accessToken) async {
     final dio = Dio();
-    final url = '$baseUrl/auth/v1/logout';
+    final url = '$baseUrl/logout';
 
     final response = await dio.post(
       url,
