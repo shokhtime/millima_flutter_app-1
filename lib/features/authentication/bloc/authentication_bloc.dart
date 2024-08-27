@@ -1,10 +1,14 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:millima/data/models/models.dart';
 import 'package:millima/domain/authentication_repository/authentication_repository.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
+
+enum SocialLoginTypes { google, facebook, github }
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
@@ -15,6 +19,7 @@ class AuthenticationBloc
   })  : _authenticationRepository = authenticationRepository,
         super(const AuthenticationState()) {
     on<LoginEvent>(_onLogin);
+    on<SocialLoginEvent>(_onSocialLogin);
     on<RegisterEvent>(_onRegister);
     on<CheckAuthStatusEvent>(_onCheckAuthStatus);
     on<LogoutEvent>(_onLogout);
@@ -32,6 +37,49 @@ class AuthenticationBloc
         status: AuthenticationStatus.authenticated,
         isLoading: false,
       ));
+    } catch (e) {
+      emit(state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      ));
+    }
+  }
+
+  void _onSocialLogin(
+    SocialLoginEvent event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+
+    try {
+      dynamic user;
+      switch (event.type) {
+        case SocialLoginTypes.google:
+          const List<String> scopes = <String>['email'];
+          final googleSignIn = GoogleSignIn(scopes: scopes);
+          user = await googleSignIn.signIn();
+          break;
+        case SocialLoginTypes.facebook:
+          user = (await FacebookAuth.instance.login());
+          break;
+        default:
+          return;
+      }
+
+      print(user);
+
+      // if (user != null) {
+      //   await _authenticationRepository.socialLogin(SocialLoginRequest(
+      //     name: user.displayName ?? '',
+      //     email: user.email,
+      //   ));
+      //   emit(state.copyWith(
+      //     status: AuthenticationStatus.authenticated,
+      //     isLoading: false,
+      //   ));
+      // } else {
+      //   throw ('User not found');
+      // }
     } catch (e) {
       emit(state.copyWith(
         isLoading: false,

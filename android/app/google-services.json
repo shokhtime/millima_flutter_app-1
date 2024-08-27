@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "177101534878",
+    "project_id": "millima-app",
+    "storage_bucket": "millima-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177101534878:android:9845ee8f779a08024c6d8f",
+        "android_client_info": {
+          "package_name": "com.example.millima"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "177101534878-vfb7puh5f4nlh5omhehlbjqrsv7ok7s2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.millima",
+            "certificate_hash": "8c7766c4b0683127a2559119e041341f7cd6e450"
+          }
+        },
+        {
+          "client_id": "177101534878-v1a75nipdhl29shjae0v8rvj98oe8kkj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDm28GXG8BT08V75z8U1awY-mG1nmYWXQc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "177101534878-v1a75nipdhl29shjae0v8rvj98oe8kkj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "177101534878-g3eilhc9oaad6q8o7u2ksr0blgs6bg24.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.millima"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
