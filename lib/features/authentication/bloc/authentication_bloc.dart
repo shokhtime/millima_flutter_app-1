@@ -52,34 +52,44 @@ class AuthenticationBloc
     emit(state.copyWith(isLoading: true));
 
     try {
-      dynamic user;
+      SocialLoginRequest? request;
       switch (event.type) {
         case SocialLoginTypes.google:
           const List<String> scopes = <String>['email'];
           final googleSignIn = GoogleSignIn(scopes: scopes);
-          user = await googleSignIn.signIn();
+          final googleUser = await googleSignIn.signIn();
+          if (googleUser != null) {
+            request = SocialLoginRequest(
+              name: googleUser.displayName ?? '',
+              email: googleUser.email,
+            );
+          }
           break;
         case SocialLoginTypes.facebook:
-          user = (await FacebookAuth.instance.login());
+          final result = await FacebookAuth.instance.login();
+          if (result.status == LoginStatus.success) {
+            final userData = await FacebookAuth.i.getUserData(
+              fields: "name,email",
+            );
+            request = SocialLoginRequest(
+              name: userData['name'] ?? '',
+              email: userData['email'],
+            );
+          }
           break;
         default:
           return;
       }
 
-      print(user);
-
-      // if (user != null) {
-      //   await _authenticationRepository.socialLogin(SocialLoginRequest(
-      //     name: user.displayName ?? '',
-      //     email: user.email,
-      //   ));
-      //   emit(state.copyWith(
-      //     status: AuthenticationStatus.authenticated,
-      //     isLoading: false,
-      //   ));
-      // } else {
-      //   throw ('User not found');
-      // }
+      if (request != null) {
+        await _authenticationRepository.socialLogin(request);
+        emit(state.copyWith(
+          status: AuthenticationStatus.authenticated,
+          isLoading: false,
+        ));
+      } else {
+        throw ('User not found');
+      }
     } catch (e) {
       emit(state.copyWith(
         isLoading: false,
